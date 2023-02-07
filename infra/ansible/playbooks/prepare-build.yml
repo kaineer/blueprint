@@ -1,12 +1,10 @@
 - name: Prepare build
   hosts: localhost
-  vars:
-    project_root: "{{ lookup('ansible.builtin.env', 'PWD') }}"
-    polygon_path: "{{ project_root }}/polygon"
-    repository_dest: "{{ polygon_path }}/package"
-    repository_slug: "{{ lookup('ansible.builtin.env', 'REPO_SLUG') }}"
-    repository_url: "git@github.com:htmlacademy/{{ repository_slug }}.git"
   tasks:
+    - name: "Load common vars"
+      include_vars:
+        file: "./common_vars.yml"
+
     - name: "Create polygon for building image"
       file:
         path: "{{ polygon_path }}"

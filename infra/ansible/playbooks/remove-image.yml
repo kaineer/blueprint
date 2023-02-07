@@ -1,29 +1,28 @@
-- name: Build image
+- name: Remove image
   hosts: localhost
   tasks:
     - name: "Load common vars"
       include_vars:
         file: "./common_vars.yml"
 
+    - name: "Create polygon for building image"
+      file:
+        path: "{{ polygon_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: "Clone repository"
+      git:
+        repo: "{{ repository_url }}"
+        dest: "{{ repository_dest }}"
+
     - name: "Read version from config"
       set_fact:
         package_version: "{{ lookup('file', '{{ repository_dest }}/package.json') | from_json | json_query(jq) }}"
       vars:
         jq: "version"
-
-    - name: "Copy Dockerfile"
-      copy:
-        src: "{{ project_root }}/ansible/files/{{ item }}"
-        dest: "{{ polygon_path }}/{{ item }}"
-      with_items:
-        - Dockerfile
-        - .dockerignore
-
-    - name: "Build docker image"
+    - name: "Remove docker image"
       docker_image:
         name: "{{ repository_slug }}"
         tag: "{{ package_version }}"
-        source: build
-        build:
-          rm: true
-          path: "{{ polygon_path }}"
+        state: "absent"

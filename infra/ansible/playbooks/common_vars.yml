@@ -1,0 +1,5 @@
+project_root: "{{ lookup('ansible.builtin.env', 'PWD') }}"
+repository_slug: "{{ lookup('ansible.builtin.env', 'REPO_SLUG') }}"
+polygon_path: "{{ project_root }}/polygon/{{ repository_slug }}"
+repository_dest: "{{ polygon_path }}/package"
+repository_url: "git@github.com:htmlacademy/{{ repository_slug }}.git"
