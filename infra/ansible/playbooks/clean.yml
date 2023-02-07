@@ -1,0 +1,10 @@
+- name: Cleanup polygon
+  hosts: localhost
+  vars:
+    project_root: "{{ lookup('ansible.builtin.env', 'PWD') }}"
+    polygon_path: "{{ project_root }}/polygon"
+  tasks:
+    - name: "Remove polygon directory"
+      file:
+        path: "{{ polygon_path }}"
+        state: absent
