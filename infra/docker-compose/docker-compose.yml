@@ -1,0 +1,42 @@
+version: "3"
+services:
+  s3:
+    tty: true
+    # See command here:
+    #   https://hub.docker.com/r/minio/minio/
+    image: "minio/minio"
+    command: "server /data --console-address \":9001\""
+    volumes:
+      - "minio-data:/data"
+    ports:
+      - "9000:9000" # service
+      - "9001:9001" # web console
+    # Variables from stderr:
+    #  (also, work as credentials for s3)
+    environment:
+      MINIO_ROOT_USER: "s3admin"
+      MINIO_ROOT_PASSWORD: "s3password"
+    networks:
+      - s3
+
+  api:
+    image: "autochecks-api"
+    networks:
+      - s3
+      - autochecks
+
+  bucket-creator:
+    tty: true
+    image: "bucket-creator"
+    build: "./images/bucket-creator"
+    depends_on:
+      - s3
+    networks:
+      - s3
+
+networks:
+  s3: {}
+  autochecks: {}
+
+volumes:
+  minio-data: {}
