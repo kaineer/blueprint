@@ -1,0 +1,13 @@
+#
+#
+#
+version: "3"
+services:
+  bucket-creator:
+    tty: true
+    image: "bucket-creator"
+    build: "./images/bucket-creator"
+    depends_on:
+      - s3
+    networks:
+      - s3

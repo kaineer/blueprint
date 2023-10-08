@@ -2,7 +2,7 @@ const Minio = require('minio');
 
 const bucketName = 'projects';
 
-const createMinioBucket = () => {
+const createMinioBuckets = () => {
   const client = new Minio.Client({
     endPoint: 's3',
     port: 9000,
@@ -11,22 +11,27 @@ const createMinioBucket = () => {
     secretKey: 's3password'
   });
 
-  client.bucketExists(bucketName, (err, exists) => {
-    if (err) {
-      throw err;
-    }
+  const createBucket = (name) => {
+    client.bucketExists(name, (err, exists) => {
+      if (err) {
+        throw err;
+      }
 
-    if (!exists) {
-      client.makeBucket('projects', 'eu-center-1', (err) => {
-        if (err) {
-          throw err;
-        }
+      if (!exists) {
+        client.makeBucket(name, 'eu-center-1', (err) => {
+          if (err) {
+            throw err;
+          }
 
-        console.log("Bucket projects is created");
-      });
-    }
-  });
+          console.log("Bucket " + name + " is created");
+        });
+      }
+    });
+  }
+
+  createBucket("projects");
+  createBucket("results");
 };
 
 // minio needs some time to startup
-setTimeout(createMinioBucket, 5000);
+setTimeout(createMinioBuckets, 5000);

@@ -1,0 +1,28 @@
+{
+  "title": "Autochecks API Queue",
+  "port": 3000,
+  "prefix": "autochecks",
+  "log-level": "error",
+  "sentry-dsn": "",
+  "redis": {
+    "host": "redis",
+    "port": 6379
+  },
+  "database": {
+    "uri": "mongodb://mongodb:27017",
+    "name": "autochecks-api"
+  },
+  "s3": {
+    "test-storage": {
+      "endpoint": "s3",
+      "accessKey": "s3admin",
+      "secretKey": "s3password",
+      "region": "eu-center-1"
+    }
+  },
+  "resultServer": {
+    "protocol": "s3",
+    "bucket": "results",
+    "domain": "http://s3/autochecks/results"
+  }
+}

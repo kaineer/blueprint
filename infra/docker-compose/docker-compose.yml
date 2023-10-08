@@ -1,3 +1,6 @@
+#
+# Development version
+#
 version: "3"
 services:
   s3:
@@ -21,22 +24,38 @@ services:
 
   api:
     image: "autochecks-api"
+    volumes:
+      # Put config into container
+      - "./files/api/config:/usr/src/app/config"
     networks:
       - s3
       - autochecks
+      - queue
 
-  bucket-creator:
-    tty: true
-    image: "bucket-creator"
-    build: "./images/bucket-creator"
-    depends_on:
-      - s3
+  redis:
+    image: "redis:alpine"
+    restart: "always"
+    ports:
+      - "6379:6379"
     networks:
-      - s3
+      - queue
+
+  # mongodb:
+  #   image: "mongo"
+
+  # bucket-creator:
+  #   tty: true
+  #   image: "bucket-creator"
+  #   build: "./images/bucket-creator"
+  #   depends_on:
+  #     - s3
+  #   networks:
+  #     - s3
 
 networks:
   s3: {}
   autochecks: {}
+  queue: {}
 
 volumes:
   minio-data: {}
